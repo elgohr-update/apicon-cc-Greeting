@@ -1,0 +1,32 @@
+workspace:
+  base: /go
+  path: src
+
+pipeline:
+  build:
+    image: golang:1.12.4
+    commands:
+      - cd src
+      - export GOPROXY=https://goproxy.io
+      - export GO111MODULE=on
+      - go mod tidy
+      - CGO_ENABLED=0 go build -o greeting
+
+  publish:
+    image: plugins/docker
+    secrets: [docker_username, docker_password, docker_registry]
+    repo: registry.cn-hongkong.aliyuncs.com/apicon/greeting
+    dockerfile: ./Dockerfile
+    tags: latest
+
+  deploy:
+    image: docker:latest
+    volumes: [/var/run/docker.sock:/var/run/docker.sock]
+    secrets: [docker_username, docker_password, docker_registry]
+    commands:
+      - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD $DOCKER_REGISTRY
+      - docker rm -f greeting || true
+      - docker pull $DOCKER_REGISTRY/apicon/greeting
+      - docker run -dt --name greeting -p 8001:8001 -v /home/app/greeting/config:/home/app/config $DOCKER_REGISTRY/apicon/greeting:latest
+
+volumes: [/var/run/docker.sock:/var/run/docker.sock]
