@@ -1,8 +1,7 @@
 FROM alpine:latest
 
 ADD . /home/app/
-WORKDIR /home/app
-ENTRYPOINT ["/bin/sh"]
-#ENTRYPOINT ["./src/greeting"]
+WORKDIR /home/app/src
+ENTRYPOINT ["./greeting"]
 
 EXPOSE 9001
