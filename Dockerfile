@@ -4,4 +4,4 @@ ADD . /home/app/
 WORKDIR /home/app
 ENTRYPOINT ["./src/greeting"]
 
-EXPOSE 8001
+EXPOSE 9001
