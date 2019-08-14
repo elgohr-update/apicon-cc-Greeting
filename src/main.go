@@ -7,7 +7,7 @@ import (
 )
 
 func main(){
-	config, err := toml.LoadFile("./config/base.toml")
+	config, err := toml.LoadFile("config/base.toml")
 	if err != nil{
 		panic(err)
 	}
