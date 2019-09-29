@@ -27,6 +27,6 @@ pipeline:
       - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD $DOCKER_REGISTRY
       - docker rm -f greeting || true
       - docker pull $DOCKER_REGISTRY/apicon/greeting
-      - docker run -dt --name greeting -p 9001:9001 -v /home/app/greeting/config:/home/app/src/config $DOCKER_REGISTRY/apicon/greeting:latest
+      - docker run -dt --name greeting -p 127.0.0.1:9001:9001 -v /home/app/greeting/config:/home/app/src/config $DOCKER_REGISTRY/apicon/greeting:latest
 
 volumes: [/var/run/docker.sock:/var/run/docker.sock]
