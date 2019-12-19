@@ -49,7 +49,7 @@ jobs:
 
       - name: Settings
         run: |
-          chmod +x ./src/Greeting
+          chmod +x ./src/greeting
           ls -l
 
       - name: Build & Publish to Registry
