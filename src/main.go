@@ -1,29 +1,26 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/pelletier/go-toml"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-func main(){
-	config, err := toml.LoadFile("config/base.toml")
-	if err != nil{
-		panic(err)
-	}
-
+func main() {
 	r := gin.Default()
+
 	r.NoRoute(NoResponse)
-	r.GET("/hello", func(c *gin.Context){
+
+	r.GET("/hello", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"error": 0,
-			"data": "Hi! Welcome to Apicon!",
+			"data":  "Hi! Welcome to Apicon!",
 		})
 	})
 
 	r.POST("/greeting", func(c *gin.Context) {
 		name, exist := c.GetQuery("name")
-		if !exist{
+		if !exist {
 			name = "But I don't know who you are."
 		}
 
@@ -31,15 +28,15 @@ func main(){
 		c.JSON(200, gin.H{
 			"error": 0,
 			"data": map[string]string{
-				"say": "Hello! " + name,
+				"say":     "Hello! " + name,
 				"message": string(msg),
 			},
 		})
 	})
-	_ = r.Run(config.Get("server.port").(string))
+	_ = r.Run(":8080")
 }
 
-func NoResponse(c *gin.Context){
+func NoResponse(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{
 		"error": 40400,
 		"data":  "",
