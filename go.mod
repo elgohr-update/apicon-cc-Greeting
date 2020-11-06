@@ -1,6 +1,6 @@
-module Greeting
+module github.com/apicon-cc/Greeting
 
-go 1.12
+go 1.14
 
 require (
 	github.com/gin-gonic/gin v1.4.0 // indirect
