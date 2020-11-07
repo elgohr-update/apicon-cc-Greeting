@@ -85,4 +85,4 @@ jobs:
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $DOCKER_REGISTRY
             docker rmi $DOCKER_NAME || true
             docker pull $DOCKER_NAME
-            docker run -dt --name Service_Greeting -e TZ=Asia/Shanghai --net "apicon-service" --ip 172.19.0.10 $DOCKER_NAME:latest
+            docker run -dt --name Service_Greeting -e TZ=Asia/Shanghai --net "apicon-service" --ip 172.20.0.10 $DOCKER_NAME:latest
