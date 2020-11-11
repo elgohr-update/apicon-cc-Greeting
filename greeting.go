@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,21 @@ func main() {
 			},
 		})
 	})
+
+	r.GET("/whoami", func(c *gin.Context) {
+		if c.GetHeader("X-Apicon-Auth") != "" {
+			c.JSON(200, gin.H{
+				"error": 0,
+				"data":  fmt.Sprintf("Hello %s!", c.GetHeader("X-Apicon-User-Nickname")),
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"error": 0,
+			"data":  "Sorry, I don't know who you are.",
+		})
+	})
+	
 	_ = r.Run(":8080")
 }
 
