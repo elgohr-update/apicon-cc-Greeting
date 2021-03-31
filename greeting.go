@@ -17,7 +17,7 @@ func main() {
 
 	svc := service.New("Greeting", 2)
 
-	svc.Route().GET("/greeting", func(c *gin.Context) {
+	svc.Route().GET("/", func(c *gin.Context) {
 		c.JSON(gadget.MakeSuccessJSON(gin.H{
 			"error": 0,
 			"data":  "Hi! Welcome to Apicon!",
