@@ -1,9 +1,9 @@
 FROM alpine:latest
 
-ADD . /home/app/
-WORKDIR /home/app
+ADD Greeting /home/app/
+WORKDIR /home/app/
 
-RUN chmod 777 /home/app/Greeting
+RUN chmod 655 /home/app/Greeting
 
 ENTRYPOINT ["./Greeting"]
 EXPOSE 8080

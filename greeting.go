@@ -1,60 +1,55 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"dev.apicon.cn/sdk/service"
+	"github.com/wuhan005/gadget"
 
 	"github.com/gin-gonic/gin"
+	log "unknwon.dev/clog/v2"
 )
 
 func main() {
-	r := gin.Default()
+	defer log.Stop()
+	err := log.NewConsole()
+	if err != nil {
+		panic(err)
+	}
 
-	r.NoRoute(NoResponse)
+	svc := service.New("Greeting", 2)
 
-	r.GET("/hello", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+	svc.Route().GET("/greeting", func(c *gin.Context) {
+		c.JSON(gadget.MakeSuccessJSON(gin.H{
 			"error": 0,
 			"data":  "Hi! Welcome to Apicon!",
-		})
+		}))
 	})
 
-	r.POST("/greeting", func(c *gin.Context) {
-		name, exist := c.GetQuery("name")
-		if !exist {
+	svc.Route().POST("/greeting", func(c *gin.Context) {
+		var name string
+
+		user, err := service.GetUser(c)
+		if err == nil {
+			name = user.Name
+		} else {
 			name = "But I don't know who you are."
 		}
 
 		msg, _ := c.GetRawData()
-		c.JSON(200, gin.H{
-			"error": 0,
-			"data": map[string]string{
-				"say":     "Hello! " + name,
-				"message": string(msg),
-			},
-		})
+		c.JSON(gadget.MakeSuccessJSON(gin.H{
+			"say":     "Hello " + name,
+			"message": string(msg),
+		}))
 	})
 
-	r.GET("/whoami", func(c *gin.Context) {
-		if c.GetHeader("X-Apicon-Auth") != "" {
-			c.JSON(200, gin.H{
-				"error": 0,
-				"data":  fmt.Sprintf("Hello %s!", c.GetHeader("X-Apicon-User-Nickname")),
-			})
+	svc.Route().GET("/whoami", func(c *gin.Context) {
+		user, err := service.GetUser(c)
+		if err == nil {
+			c.JSON(gadget.MakeSuccessJSON("Hello " + user.NickName))
 			return
 		}
-		c.JSON(200, gin.H{
-			"error": 0,
-			"data":  "Sorry, I don't know who you are.",
-		})
-	})
-	
-	_ = r.Run(":8080")
-}
 
-func NoResponse(c *gin.Context) {
-	c.JSON(http.StatusNotFound, gin.H{
-		"error": 40400,
-		"data":  "",
+		c.JSON(gadget.MakeSuccessJSON("Sorry, I don't know who you are."))
 	})
+
+	svc.Run()
 }
